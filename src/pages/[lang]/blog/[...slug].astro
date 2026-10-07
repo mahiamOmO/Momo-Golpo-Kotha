@@ -1,0 +1,64 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+const languages = ['en', 'bn'] as const;
+type Language = (typeof languages)[number];
+
+const getLanguage = (postId: string, language?: Language): Language => {
+  if (language) return language;
+  const folder = postId.split('/')[0];
+  return folder === 'bn' ? 'bn' : 'en';
+};
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+
+  return posts.map((post) => {
+    const parts = post.id.split('/');
+    const folderLanguage = parts.shift();
+    const slug = parts.join('/');
+    const language = getLanguage(post.id, folderLanguage as Language);
+
+    return {
+      params: { lang: language, slug },
+      props: { post, slug, language },
+    };
+  });
+}
+
+const { post, slug, language } = Astro.props;
+const posts = await getCollection('blog');
+const alternateLanguage: Language = language === 'en' ? 'bn' : 'en';
+const alternate = posts.find((candidate) => {
+  const candidateParts = candidate.id.split('/');
+  const candidateLanguage = getLanguage(candidate.id, candidate.data.language);
+  return candidateLanguage === alternateLanguage && candidateParts.slice(1).join('/') === slug;
+});
+const { Content } = await render(post);
+const date = post.data.date.toLocaleDateString(language === 'bn' ? 'bn-BD' : 'en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+<Layout title={`${post.data.title} — Momo’r Golpo Kotha`} description={post.data.description}>
+  <article class="article" lang={language}>
+    <a class="back" href={`/${language}/blog`}>← All posts</a>
+    <h1>{post.data.title}</h1>
+    <div class="meta">
+      <span class="lt">{language === 'bn' ? 'বাংলা' : 'English'}</span>
+      <time>{date}</time>
+      {post.data.tags.map((tag) => <span>#{tag}</span>)}
+    </div>
+    {alternate && (
+      <nav class="article-languages" aria-label="Article language">
+        <span>{language === 'bn' ? 'এই লেখাটি পড়ুন:' : 'Read this post in:'}</span>
+        <a class="lt" href={`/${alternateLanguage}/blog/${slug}`}>
+          {alternateLanguage === 'bn' ? 'বাংলা' : 'English'}
+        </a>
+      </nav>
+    )}
+    <div class="prose"><Content /></div>
+  </article>
+</Layout>

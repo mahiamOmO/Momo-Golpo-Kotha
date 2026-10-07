@@ -1,0 +1,98 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+const { title = 'Momo’r Golpo Kotha', description = 'Golpo, kotha ar code — বাংলা ও English দুই ভাষাতেই।' } = Astro.props;
+const posts = (await getCollection('posts')).sort((a, b) => +b.data.date - +a.data.date);
+const items = [
+  { t: 'Home', h: '/' },
+  { t: 'Blog', h: '/blog' },
+  { t: 'বাংলা লেখা', h: '/blog?lang=bn' },
+  { t: 'English posts', h: '/blog?lang=en' },
+  { t: 'About', h: '/#about' },
+  ...posts.map((p) => ({ t: p.data.title, h: `/blog/${p.id}` })),
+];
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content={description} />
+  <title>{title}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Geist+Mono:wght@400;500&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <div class="w bar">
+      <a class="logo" href="/"><img class="mark" src="/Logo.png" alt="" />Momo’r Golpo Kotha</a>
+      <nav aria-label="Main">
+        <a href="/#about">About</a>
+        <a href="/blog">Blog</a>
+        <a href="/blog?lang=bn">বাংলা</a>
+        <a href="/blog?lang=en">English</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <div class="acts">
+        <a class="signin" href="https://github.com/">GitHub</a>
+        <a class="pill" href="/blog">Read blog</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main"><slot /></main>
+
+  <footer id="contact">
+    <div class="w">
+      <div class="fg">
+        <div>
+          <a class="logo" href="/"><img class="mark" src="/Logo.png" alt="" />Momo’r Golpo Kotha</a>
+          <p>Golpo, kotha ar code — বাংলা ও English দুই ভাষাতেই।</p>
+        </div>
+        <div><h4>Blog</h4><a href="/blog">All posts</a><a href="/blog?lang=bn">বাংলা</a><a href="/blog?lang=en">English</a></div>
+        <div><h4>About</h4><a href="/#about">About Momo</a><a href="/#faq">FAQ</a></div>
+        <div><h4>Elsewhere</h4><a href="https://github.com/">GitHub</a><a href="mailto:you@example.com">Email</a><a href="https://x.com/">X</a></div>
+      </div>
+      <div class="copy"><span>© 2026 Momo’r Golpo Kotha</span><span class="mono">built with Astro · v1.0.0</span></div>
+    </div>
+  </footer>
+
+  <div id="pal" role="dialog" aria-label="Command palette" hidden>
+    <div class="box">
+      <input id="pi" placeholder="Jump to a page or post…" aria-label="Jump to" autocomplete="off" />
+      <div id="pl"></div>
+    </div>
+  </div>
+  <script type="application/json" id="pal-data" set:html={JSON.stringify(items)} />
+  <script>
+    const items: { t: string; h: string }[] = JSON.parse(document.getElementById('pal-data')!.textContent || '[]');
+    const pal = document.getElementById('pal')!;
+    const pi = document.getElementById('pi') as HTMLInputElement;
+    const pl = document.getElementById('pl')!;
+    let sel = 0, cur = items;
+    const draw = () => {
+      const v = pi.value.toLowerCase();
+      cur = items.filter((i) => i.t.toLowerCase().includes(v));
+      if (sel >= cur.length) sel = 0;
+      pl.innerHTML = cur.map((i, n) => `<a href="${i.h}" class="${n === sel ? 'sel' : ''}">${i.t}</a>`).join('');
+    };
+    const show = () => { pal.hidden = false; pi.value = ''; sel = 0; draw(); pi.focus(); };
+    const hide = () => { pal.hidden = true; };
+    document.querySelectorAll('[data-open-palette]').forEach((b) => b.addEventListener('click', show));
+    pal.addEventListener('click', (e) => { const t = e.target as HTMLElement; if (t === pal || t.tagName === 'A') hide(); });
+    pi.addEventListener('input', draw);
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.hidden ? show() : hide(); return; }
+      if (pal.hidden) return;
+      if (e.key === 'Escape') hide();
+      else if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(sel + 1, cur.length - 1); draw(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(sel - 1, 0); draw(); }
+      else if (e.key === 'Enter' && cur[sel]) { location.href = cur[sel].h; }
+    });
+  </script>
+</body>
+</html>

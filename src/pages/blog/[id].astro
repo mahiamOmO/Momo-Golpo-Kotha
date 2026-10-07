@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const d = post.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Layout title={`${post.data.title} — Momo’r Golpo Kotha`} description={post.data.description}>
+  <article class="article" lang={post.data.lang}>
+    <a class="back" href="/blog">← All posts</a>
+    <h1>{post.data.title}</h1>
+    <div class="meta"><span class="lt">{post.data.lang === 'bn' ? 'বাংলা' : 'English'}</span><time>{d}</time>{post.data.tags.map((t: string) => <span>#{t}</span>)}</div>
+    <div class="prose"><Content /></div>
+  </article>
+</Layout>

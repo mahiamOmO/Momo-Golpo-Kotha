@@ -1,0 +1,18 @@
+---
+const { posts } = Astro.props;
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+<div class="posts">
+  {posts.map((p: any) => (
+    <a class="post" href={`/blog/${p.id}`} data-lang={p.data.lang}>
+      <div>
+        <h3 lang={p.data.lang}>{p.data.title}</h3>
+        <p lang={p.data.lang}>{p.data.description}</p>
+      </div>
+      <div class="pm">
+        <span class="lt">{p.data.lang === 'bn' ? 'বাংলা' : 'English'}</span>
+        <time>{fmt(p.data.date)}</time>
+      </div>
+    </a>
+  ))}
+</div>

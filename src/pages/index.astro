@@ -1,0 +1,116 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostList from '../components/PostList.astro';
+import { getCollection } from 'astro:content';
+const latest = (await getCollection('posts')).sort((a, b) => +b.data.date - +a.data.date).slice(0, 4);
+---
+<Layout>
+  <section class="hero">
+    <div class="w hero-grid">
+      <div class="hero-copy">
+        <p class="kicker"><span></span> A bilingual notebook by Momo</p>
+        <h1>Welcome to<br /><em>Momo’r Golpo Kotha</em></h1>
+        <p class="sub">Momo’r Golpo Kotha-y ami real project, chinta ar shekhar golpo likhi. প্রতিটি লেখা বাংলা বা English-এ, যেটা পড়তে ভালো লাগে।</p>
+        <div class="cta">
+          <a class="btn p" href="/blog">Read the blog <span aria-hidden="true">→</span></a>
+          <a class="btn" href="/blog?lang=bn">বাংলা লেখা</a>
+        </div>
+      </div>
+      <aside class="hero-note">
+        <div class="note-top"><span>FIELD NOTE / 01</span><span>2026</span></div>
+        <div class="note-mark">“</div>
+        <p>মেশিনকে লার্ন করানো সহজ,<br />কিন্তু মানুষের অনুভূতি বোঝা—<br />সবচেয়ে কঠিন।</p>
+        <div class="note-rule"></div>
+        <div class="note-bottom"><span>from the notebook</span><span class="scribble">momo ✳</span></div>
+        <div class="note-tag">read slowly</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="features">
+    <div class="w">
+      <h2>Written like a notebook — not another content feed.</h2>
+      <p class="lead">Every post comes from something I lived, built or finally understood.</p>
+      <div class="cards">
+        <div class="card"><div class="ico">✎</div><h3>Golpo</h3><p>ছোট ছোট গল্প আর অভিজ্ঞতা, যা মনে থেকে যায়।</p></div>
+        <div class="card"><div class="ico">◐</div><h3>Kotha</h3><p>Everyday thoughts and honest notes on life and learning.</p></div>
+        <div class="card"><div class="ico">&gt;_</div><h3>Code notes</h3><p>Small fixes and project write-ups I wish I had found sooner.</p></div>
+        <div class="card"><div class="ico">⇄</div><h3>বাংলা ও English</h3><p>Filter by language, or read both. Same blog, two voices.</p></div>
+        <div class="card"><div class="ico">{'{ }'}</div><h3>Fast and static</h3><p>Built with Astro, so every page loads instantly with almost no JavaScript.</p></div>
+        <div class="card"><div class="ico">⌘</div><h3>Keyboard friendly</h3><p>Press Ctrl+K to jump to any post or page.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="reader">
+    <div class="w">
+      <h2>Same story, two languages.</h2>
+      <p class="lead">Pick <code>বাংলা</code> or <code>English</code> on the <a href="/blog">blog page</a>, and only the posts in that language stay on screen.</p>
+      <div class="split">
+        <div class="viewer">
+          <div class="vh"><span>Reader · welcome</span><span class="c-r">2 languages</span></div>
+          <div class="cols">
+            <div><div class="t">বাংলা</div><div class="l d">স্বাগতম! এখানে আমি গল্প আর কথা লিখে রাখি।</div></div>
+            <div><div class="t">English</div><div class="l a">Welcome! This is where I keep my stories and thoughts.</div></div>
+          </div>
+        </div>
+        <div class="term">
+          <div class="cmd">$ momo read --lang bn</div>
+          <div>posts=2 language=bn</div>
+          <div>NEW &nbsp;&nbsp;&nbsp;আমার প্রথম গল্প</div>
+          <div>NEW &nbsp;&nbsp;&nbsp;ভালো লাগার কথা</div>
+          <br />
+          <div class="bad">Tip: add lang: en to read in English.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="blog">
+    <div class="w">
+      <h2>Latest writing.</h2>
+      <p class="lead">The newest posts, in both languages.</p>
+      <PostList posts={latest} />
+      <div style="margin-top:28px"><a class="btn" href="/blog">All posts <span aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
+
+  <section class="sec" id="about">
+    <div class="w">
+      <h2>Personal, open, and still early.</h2>
+      <p class="lead">Ei blog ta amar nijer jaygay. Eta niye kono tension nai — shikhte shikhte likhi.</p>
+      <div class="three">
+        <div><h3>About Momo</h3><p>Ekjon manush ja code kore, golpo bhalobashe. Edit this text with your own story.</p></div>
+        <div><h3>Write in the open</h3><p>Every post is a plain Markdown file. Add one, and it appears on the site.</p></div>
+        <div><h3>Two languages</h3><p>Set <span class="mono-i">lang: bn</span> or <span class="mono-i">lang: en</span> at the top of each post.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding:0">
+    <div class="w kb">
+      <div class="l"><span class="ico">⌨</span><div><h3>Keyboard-first, like the tools you already live in.</h3><p><kbd>Ctrl</kbd> <kbd>K</kbd> command palette · jump to any post</p></div></div>
+      <button class="btn" data-open-palette>Open palette</button>
+    </div>
+  </section>
+
+  <section class="sec" id="faq">
+    <div class="faq">
+      <h2>Frequently asked questions</h2>
+      <h3>Ki niye lekho?</h3>
+      <p>Golpo, chinta, ar code. Kokhono bangla, kokhono English — jeta mone ashe.</p>
+      <h3>How do I add a new post?</h3>
+      <p>Create a Markdown file in <span class="mono-i">src/content/posts</span> with a title, date and language, then push to GitHub.</p>
+      <h3>Can I read only Bangla posts?</h3>
+      <p>Yes. Open the blog page and choose বাংলা. The choice is saved in the link, so you can share it.</p>
+    </div>
+  </section>
+
+  <section class="sec final">
+    <div class="w">
+      <h2>Read the latest story.</h2>
+      <p class="lead">Free to read. No ads. New posts when something is worth saying.</p>
+      <div class="cta" style="margin:0"><a class="btn p" href="/blog">Open the blog <span aria-hidden="true">→</span></a><a class="btn" href="/#about">About Momo</a></div>
+    </div>
+  </section>
+</Layout>

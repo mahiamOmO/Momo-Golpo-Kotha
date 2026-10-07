@@ -1,0 +1,35 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostList from '../../components/PostList.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('posts')).sort((a, b) => +b.data.date - +a.data.date);
+---
+<Layout title="Blog — Momo’r Golpo Kotha">
+  <div class="w page">
+    <h1>Blog</h1>
+    <p class="lead">সব লেখা এক জায়গায়। All posts in one place.</p>
+    <div class="filters" role="group" aria-label="Language">
+      <button data-filter="all" aria-pressed="true">All</button>
+      <button data-filter="bn" aria-pressed="false">বাংলা</button>
+      <button data-filter="en" aria-pressed="false">English</button>
+    </div>
+    <PostList posts={posts} />
+    <p class="lead" id="empty" hidden style="margin-top:28px">No posts in this language yet.</p>
+  </div>
+  <script>
+    const rows = [...document.querySelectorAll<HTMLElement>('.post')];
+    const btns = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const empty = document.getElementById('empty')!;
+    const set = (l: string) => {
+      btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === l)));
+      rows.forEach((r) => (r.hidden = !(l === 'all' || r.dataset.lang === l)));
+      empty.hidden = rows.some((r) => !r.hidden);
+    };
+    btns.forEach((b) => b.addEventListener('click', () => {
+      set(b.dataset.filter!);
+      history.replaceState(null, '', b.dataset.filter === 'all' ? '/blog' : `/blog?lang=${b.dataset.filter}`);
+    }));
+    const q = new URLSearchParams(location.search).get('lang');
+    set(q === 'bn' || q === 'en' ? q : 'all');
+  </script>
+</Layout>
