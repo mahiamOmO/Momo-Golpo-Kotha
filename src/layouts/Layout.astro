@@ -31,6 +31,7 @@ const items = [
     <div class="w bar">
       <a class="logo" href="/"><img class="mark" src="/Logo.png" alt="" />Momo’r Golpo Kotha</a>
       <nav aria-label="Main">
+        <a href="/">Home</a>
         <a href="/#about">About</a>
         <a href="/blog">Blog</a>
         <a href="/blog?lang=bn">বাংলা</a>
@@ -38,6 +39,11 @@ const items = [
         <a href="/#contact">Contact</a>
       </nav>
       <div class="acts">
+        <label class="site-search">
+          <span class="sr-only">Search pages and posts</span>
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="site-search" type="search" placeholder="Search" autocomplete="off" />
+        </label>
         <a class="signin" href="https://github.com/">GitHub</a>
         <a class="pill" href="/blog">Read blog</a>
       </div>
@@ -72,6 +78,7 @@ const items = [
     const items: { t: string; h: string }[] = JSON.parse(document.getElementById('pal-data')!.textContent || '[]');
     const pal = document.getElementById('pal')!;
     const pi = document.getElementById('pi') as HTMLInputElement;
+    const siteSearch = document.getElementById('site-search') as HTMLInputElement;
     const pl = document.getElementById('pl')!;
     let sel = 0, cur = items;
     const draw = () => {
@@ -80,11 +87,13 @@ const items = [
       if (sel >= cur.length) sel = 0;
       pl.innerHTML = cur.map((i, n) => `<a href="${i.h}" class="${n === sel ? 'sel' : ''}">${i.t}</a>`).join('');
     };
-    const show = () => { pal.hidden = false; pi.value = ''; sel = 0; draw(); pi.focus(); };
+    const show = (value = '') => { pal.hidden = false; pi.value = value; sel = 0; draw(); pi.focus(); };
     const hide = () => { pal.hidden = true; };
-    document.querySelectorAll('[data-open-palette]').forEach((b) => b.addEventListener('click', show));
+    document.querySelectorAll('[data-open-palette]').forEach((b) => b.addEventListener('click', () => show()));
+    siteSearch.addEventListener('input', () => show(siteSearch.value));
+    siteSearch.addEventListener('focus', () => show(siteSearch.value));
     pal.addEventListener('click', (e) => { const t = e.target as HTMLElement; if (t === pal || t.tagName === 'A') hide(); });
-    pi.addEventListener('input', draw);
+    pi.addEventListener('input', () => { siteSearch.value = pi.value; draw(); });
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.hidden ? show() : hide(); return; }
       if (pal.hidden) return;
