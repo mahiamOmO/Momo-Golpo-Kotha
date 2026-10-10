@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PostList from '../components/PostList.astro';
+import LanguageShowcaseV2 from '../components/LanguageShowcase.v2.astro';
 import { getCollection } from 'astro:content';
 const latest = (await getCollection('posts')).sort((a, b) => +b.data.date - +a.data.date).slice(0, 4);
 ---
@@ -44,25 +45,7 @@ const latest = (await getCollection('posts')).sort((a, b) => +b.data.date - +a.d
 
   <section class="sec" id="reader">
     <div class="w">
-      <h2>Same story, two languages.</h2>
-      <p class="lead">Pick <code>বাংলা</code> or <code>English</code> on the <a href="/blog">blog page</a>, and only the posts in that language stay on screen.</p>
-      <div class="split">
-        <div class="viewer">
-          <div class="vh"><span>Reader · welcome</span><span class="c-r">2 languages</span></div>
-          <div class="cols">
-            <div><div class="t">বাংলা</div><div class="l d">স্বাগতম! এখানে আমি গল্প আর কথা লিখে রাখি।</div></div>
-            <div><div class="t">English</div><div class="l a">Welcome! This is where I keep my stories and thoughts.</div></div>
-          </div>
-        </div>
-        <div class="term">
-          <div class="cmd">$ momo read --lang bn</div>
-          <div>posts=2 language=bn</div>
-          <div>NEW &nbsp;&nbsp;&nbsp;আমার প্রথম গল্প</div>
-          <div>NEW &nbsp;&nbsp;&nbsp;ভালো লাগার কথা</div>
-          <br />
-          <div class="bad">Tip: add lang: en to read in English.</div>
-        </div>
-      </div>
+      <LanguageShowcaseV2 />
     </div>
   </section>
 

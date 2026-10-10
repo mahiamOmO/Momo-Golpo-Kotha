@@ -1,0 +1,118 @@
+---
+// src/components/LanguageShowcase.v2.astro
+// Static: no JavaScript. Edit the text below.
+---
+
+<section class="ls">
+  <div class="ls-head">
+    <h2>Same story, two <span>languages.</span></h2>
+    <p class="ls-lead">
+      Every post can be read in <b class="bn">বাংলা</b> or <b>English</b>.
+      Pick one on the <a href="/blog">blog page</a>, and only the posts in that language stay on screen.
+    </p>
+  </div>
+
+  <div class="ls-grid">
+    <div class="ls-card">
+      <div class="ls-bar"><i></i><i></i><i></i><code>momo-golpo-kotha.app/blog/first-story</code></div>
+      <article class="ls-post">
+        <div class="meta"><span class="badge bn">বাংলা</span><span>5 Oct 2026</span></div>
+        <h3 class="bn">আমার প্রথম গল্প</h3>
+        <p class="bn">ছোটবেলা থেকেই গল্প শুনতে ভালোবাসতাম। আজ সেই গল্পগুলোই নিজের ভাষায় লিখে রাখছি, যাতে একদিন অন্য কেউ পড়ে নিজের কথা খুঁজে পায়।</p>
+      </article>
+      <div class="ls-term">
+        <div><span class="ls-p">$</span> momo read first-story --lang <span class="ls-chip">bn</span></div>
+        <div class="ls-m">translations: bn, en · reading: bn</div>
+      </div>
+    </div>
+
+    <div class="ls-card">
+      <div class="ls-bar"><i></i><i></i><i></i><code>momo-golpo-kotha.app/blog/first-story</code></div>
+      <article class="ls-post">
+        <div class="meta"><span class="badge">English</span><span>5 Oct 2026</span></div>
+        <h3>My first story</h3>
+        <p>I loved listening to stories as a kid. Now I write them down in my own words, so someone else can read them one day and find a little of themselves.</p>
+      </article>
+      <div class="ls-term">
+        <div><span class="ls-p">$</span> momo read first-story --lang <span class="ls-chip">en</span></div>
+        <div class="ls-m">translations: bn, en · reading: en</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ls {
+    --ink: #f5f7f6; --mute: #a7b3af; --line: rgba(255,255,255,.08);
+    --accent: #6ee7d8; --soft: rgba(255,255,255,.06); --chip: rgba(255,255,255,.03); --panel: rgba(15,21,20,.88);
+    max-width: 1120px; margin: 0 auto; padding: 28px 24px 64px; color: var(--ink);
+  }
+  .bn { font-family: "Hind Siliguri", "DM Sans", sans-serif; }
+  .ls-head { margin-bottom: 22px; }
+  .ls h2 {
+    font-size: clamp(40px, 3.8vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -.045em;
+    margin: 0 0 14px;
+    font-weight: 700;
+    color: #f3f5f5;
+  }
+  .ls h2 span { color: var(--accent); }
+  .ls-lead {
+    color: var(--mute);
+    margin: 0;
+    max-width: 700px;
+    font-size: clamp(17px, 1.5vw, 22px);
+    line-height: 1.55;
+  }
+  .ls-lead a { color: var(--accent); text-underline-offset: 3px; }
+  .ls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+  .ls-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+  }
+  .ls-bar {
+    display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+    border-bottom: 1px solid var(--line); background: rgba(255,255,255,.015);
+  }
+  .ls-bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.24); flex: none; }
+  .ls-bar code { margin-left: 10px; font: 400 13px "Geist Mono", monospace; color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ls-post { padding: 24px 26px; flex: 1; }
+  .meta { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--mute); margin-bottom: 12px; }
+  .badge {
+    font-size: 11px; padding: 4px 9px; border-radius: 999px; background: rgba(255,255,255,.06); color: #fff;
+    font-weight: 600; letter-spacing: .01em;
+  }
+  .ls-post h3 { font-size: clamp(24px, 2vw, 34px); line-height: 1.25; margin: 0 0 12px; font-weight: 600; color: var(--ink); }
+  .ls-post p { margin: 0; color: #d4dfe8; font-size: 15px; line-height: 1.72; }
+  .ls-post p.bn { font-size: 16px; line-height: 1.9; }
+  .ls-term {
+    border-top: 1px solid var(--line);
+    padding: 14px 18px;
+    font: 400 13px/1.8 "Geist Mono", monospace;
+    background: var(--chip);
+    color: var(--ink);
+  }
+  .ls-p { color: var(--accent); }
+  .ls-m { color: var(--mute); }
+  .ls-chip {
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    padding: 1px 7px;
+    border-radius: 6px;
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  @media (max-width: 820px) {
+    .ls { padding: 48px 20px; }
+    .ls-grid { grid-template-columns: 1fr; }
+    .ls-post { padding: 22px 20px; }
+  }
+</style>
